@@ -2,12 +2,13 @@ package com.oktayerdogan.spring_rest_api.repository;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.TreeMap;
+
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.oktayerdogan.spring_rest_api.model.Employee;
+import com.oktayerdogan.spring_rest_api.model.UpdateEmployeeRequest;
 
 @Repository
 public class EmployeeRepository {
@@ -76,6 +77,31 @@ public class EmployeeRepository {
              employeeList.remove(deleteEmployee);
              return true;
         }
-       
+    }
+
+    private Employee findEmployee(String id){
+        Employee findEmployee=null;
+        for (Employee employee : employeeList) {
+            if(employee.getId().equals(id)){
+                findEmployee=employee;
+            }
+        }
+        return findEmployee;
+    }
+
+    public Employee updateEmployee(String id,UpdateEmployeeRequest request){
+        Employee findEmployee=findEmployee(id);
+        if(findEmployee!=null){
+            deleteEmployee(id);
+
+            Employee updatedEmployee= new Employee();
+            updatedEmployee.setId(id);
+            updatedEmployee.setFirstName(request.getFirstName());
+            updatedEmployee.setLastName(request.getLastName());
+
+            employeeList.add(updatedEmployee);
+            return updatedEmployee;
+        }
+        return null;
     }
 }
